@@ -13,11 +13,13 @@ class Http {
 
 class PlaceDescriptionService {
   public:
-  PlaceDescriptionService(Http& http) : http_{http} {}
+  PlaceDescriptionService(Http& http, const std::string& baseUrl)
+      : http_{http}, baseUrl_{baseUrl} {}
 
   inline std::string summaryDescription(const std::string& latitude,
                                         const std::string& longitude) const {
-    const auto response = http_.get("");
+    const auto url = baseUrl_ + "/lat=" + latitude + "&lon=" + longitude;
+    const auto response = http_.get(url);
     const auto jsonResponse = nlohmann::json::parse(response);
     const auto jsonAddress = jsonResponse["address"];
 
@@ -31,6 +33,7 @@ class PlaceDescriptionService {
 
   private:
   Http& http_;
+  std::string baseUrl_;
 };
 }  // namespace tdd
 
