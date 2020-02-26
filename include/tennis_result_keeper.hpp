@@ -18,14 +18,21 @@ struct TennisResultKeeper {
       first = std::to_string(firstPoints);
       second = std::to_string(secondPoints);
     }
-    return "| 0 | 0 | " + first + " |\n| 0 | 0 | " + second + " |";
+    return "| 0 | " + std::to_string(firstGames) + " | " + first +
+           " |\n| 0 | " + std::to_string(secondGames) + " | " + second + " |";
   }
 
   inline void pointFirstPlayer() {
     if (secondPoints == 55) {
       secondPoints = 40;
     } else {
-      firstPoints == 30 ? firstPoints = 40 : firstPoints += 15;
+      if (firstPoints == 40 && secondPoints != 40) {
+        firstPoints = 0;
+        secondPoints = 0;
+        firstGames = 1;
+      } else {
+        firstPoints == 30 ? firstPoints = 40 : firstPoints += 15;
+      }
     }
   }
 
@@ -33,12 +40,20 @@ struct TennisResultKeeper {
     if (firstPoints == 55) {
       firstPoints = 40;
     } else {
-      secondPoints == 30 ? secondPoints = 40 : secondPoints += 15;
+      if (secondPoints == 40 && firstPoints != 40) {
+        firstPoints = 0;
+        secondPoints = 0;
+        secondGames = 1;
+      } else {
+        secondPoints == 30 ? secondPoints = 40 : secondPoints += 15;
+      }
     }
   }
 
   int firstPoints{0};
   int secondPoints{0};
+  int firstGames{0};
+  int secondGames{0};
 };
 
 }  // namespace tdd

@@ -130,3 +130,58 @@ TEST_F(TennisResultKeeperWithAdvantageTest,
       "| 0 | 0 | 40 |";
   EXPECT_THAT(keeper.result(), Eq(expected2));
 }
+
+namespace {
+
+class TennisResultKeeperWithGamesTest : public TennisResultKeeperTest {};
+}  // namespace
+
+TEST_F(TennisResultKeeperWithGamesTest, ExpectsToConfirmThatGames1_0) {
+  keeper.pointFirstPlayer();
+  keeper.pointFirstPlayer();
+  keeper.pointFirstPlayer();
+  keeper.pointFirstPlayer();
+
+  const std::string expected =
+      "| 0 | 1 | 0 |\n"
+      "| 0 | 0 | 0 |";
+  EXPECT_THAT(keeper.result(), Eq(expected));
+}
+
+TEST_F(TennisResultKeeperWithGamesTest,
+       ExpectsToConfirmThatGamesChangesWithPoints) {
+  keeper.pointFirstPlayer();
+  keeper.pointSecondPlayer();
+  keeper.pointSecondPlayer();
+  keeper.pointSecondPlayer();
+  keeper.pointSecondPlayer();
+
+  const std::string expected =
+      "| 0 | 0 | 0 |\n"
+      "| 0 | 1 | 0 |";
+  EXPECT_THAT(keeper.result(), Eq(expected));
+
+  {
+    keeper.pointFirstPlayer();
+    keeper.pointFirstPlayer();
+    keeper.pointFirstPlayer();
+    keeper.pointFirstPlayer();
+    keeper.pointSecondPlayer();
+    const std::string expected =
+        "| 0 | 1 | 0 |\n"
+        "| 0 | 1 | 15 |";
+    EXPECT_THAT(keeper.result(), Eq(expected));
+  }
+
+  {
+    keeper.pointFirstPlayer();
+    keeper.pointFirstPlayer();
+    keeper.pointFirstPlayer();
+    keeper.pointFirstPlayer();
+    keeper.pointSecondPlayer();
+    const std::string expected =
+        "| 0 | 2 | 0 |\n"
+        "| 0 | 1 | 15 |";
+    EXPECT_THAT(keeper.result(), Eq(expected));
+  }
+}
